@@ -28,7 +28,7 @@ import numpy as np
 from PIL import Image, ImageFont
 import pyproj
 import logging
-from ConfigParser import ConfigParser
+from backports import configparser
 from .errors import *
 
 logger = logging.getLogger(__name__)
@@ -69,9 +69,9 @@ class ContourWriterBase(object):
         elif ay == 'c':
             y_pos = y_pos - txt_width / 2
 
-        self._engine_text_draw(draw, (x_pos, y_pos), txt, font, **kwargs)
+        self._engine_text_draw(draw, x_pos, y_pos, txt, font, **kwargs)
 
-    def _engine_text_draw(self, draw, (x_pos, y_pos), txt, font, **kwargs):
+    def _engine_text_draw(self, draw, x_pos, y_pos, txt, font, **kwargs):
         raise NotImplementedError('Text drawing undefined for render engine')
 
     def _draw_grid_labels(self, draw, xys, linetype, txt, font, **kwargs):
@@ -90,7 +90,7 @@ class ContourWriterBase(object):
         offset by margins and returns an array of coordintes"""
         x_size, y_size = size
 
-        def is_in_box((x, y), (xmin, xmax, ymin, ymax)):
+        def is_in_box(x, y, xmin, xmax, ymin, ymax):
             if x > xmin and x < xmax and y > ymin and y < ymax:
                 return True
             else:
@@ -121,7 +121,8 @@ class ContourWriterBase(object):
         prev_xy = xys[0]
         for i in range(1, len(xys) - 1):
             xy = xys[i]
-            if is_in_box(xy, search_box):
+            if is_in_box(xy[0], xy[1], search_box[0], search_box[1],
+                         search_box[2], search_box[3]):
                 # crossing LHS
                 if crossing(prev_xy[0], xy[0], xlim1):
                     x = xlim1
@@ -599,8 +600,8 @@ class ContourWriterBase(object):
             _get_lon_lat_bounding_box(area_extent, x_size, y_size, prj)
 
         # Iterate through detail levels
-        for shapes in self._iterate_db(db_name, tag, resolution,
-                                       level, zero_pad):
+        for shapes in self._iterate_db(db_name, tag,
+                                       resolution, level, zero_pad):
 
             # Iterate through shapes
             for i, shape in enumerate(shapes):
@@ -662,8 +663,10 @@ class ContourWriterBase(object):
         else:
             format_string += 'L%s.shp'
 
-        for i in range(level):
+        if type(level) == int:
+            level = range(level-1,level)
 
+        for i in level:
             # One shapefile per level
             if tag is None:
                 shapefilename = \
@@ -700,7 +703,7 @@ class ContourWriterBase(object):
             Area Definition of the creating image
         """
 
-        config = ConfigParser()
+        config = configparser()
         try:
             with open(config_file, 'r'):
                 logger.info("Overlays config file %s found", str(config_file))
@@ -886,7 +889,7 @@ class ContourWriterBase(object):
 
                 try:
                     (x, y) = area_def.get_xy_from_lonlat(lons, lats)
-                except ValueError, exc:
+                except ValueError as exc:
                     logger.debug("Point not added (%s)", str(exc))
                 else:
 

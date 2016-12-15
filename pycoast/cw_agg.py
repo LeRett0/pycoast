@@ -52,7 +52,7 @@ class ContourWriterAGG(ContourWriterBase):
         """
         return aggdraw.Draw(image)
 
-    def _engine_text_draw(self, draw, (x_pos, y_pos), txt, font, **kwargs):
+    def _engine_text_draw(self, draw, x_pos, y_pos, txt, font, **kwargs):
         draw.text((x_pos, y_pos), txt, font)
 
     def _draw_polygon(self, draw, coordinates, **kwargs):
@@ -273,7 +273,7 @@ class ContourWriterAGG(ContourWriterBase):
                           fill_opacity=fill_opacity, outline=outline,
                           width=width, outline_opacity=outline_opacity)
 
-    def add_grid(self, image, area_def, (Dlon, Dlat), (dlon, dlat),
+    def add_grid(self, image, area_def, Dlon, Dlat, dlon, dlat,
                  font=None, write_text=True, fill=None, fill_opacity=255,
                  outline='white', width=1, outline_opacity=255,
                  minor_outline='white', minor_width=0.5,
@@ -320,7 +320,7 @@ class ContourWriterAGG(ContourWriterBase):
                        minor_is_tick=minor_is_tick,
                        lon_placement=lon_placement, lat_placement=lat_placement)
 
-    def add_grid_to_file(self, filename, area_def, (Dlon, Dlat), (dlon, dlat),
+    def add_grid_to_file(self, filename, area_def, Dlon, Dlat, dlon, dlat,
                          font=None, write_text=True,
                          fill=None, fill_opacity=255,
                          outline='white', width=1, outline_opacity=255,

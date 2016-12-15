@@ -177,7 +177,7 @@ class TestPIL(TestPycoast):
 
         cw.add_coastlines_to_file(grid_file, area_def, resolution='l', level=4)
         font = ImageFont.truetype(os.path.join(os.path.dirname(__file__), 'test_data', 'DejaVuSerif.ttf'), 16)
-        cw.add_grid_to_file(grid_file, area_def, (10.0, 10.0), (2.0, 2.0), font=font, fill='blue',
+        cw.add_grid_to_file(grid_file, area_def, 10.0, 10.0, 2.0, 2.0, font=font, fill='blue',
                             outline='blue', minor_outline='blue')
 
         img = Image.open(grid_file)
@@ -434,7 +434,7 @@ class TestPILAGG(TestPycoast):
         cw = ContourWriterAGG(gshhs_root_dir)
 
         cw.add_coastlines_to_file(grid_file, area_def, resolution='l', level=4)
-        cw.add_grid_to_file(grid_file, area_def, (10.0, 10.0), (2.0, 2.0), write_text=False,
+        cw.add_grid_to_file(grid_file, area_def, 10.0, 10.0, 2.0, 2.0, write_text=False,
                             outline='blue', outline_opacity=255, width=1.0,
                             minor_outline='white', minor_outline_opacity=255, minor_width=0.5,
                             minor_is_tick=False)

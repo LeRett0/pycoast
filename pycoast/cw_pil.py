@@ -22,11 +22,10 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from PIL import Image, ImageFont
-from PIL import ImageDraw
-import logging
+from PIL import Image, ImageFont, ImageDraw
+from pycoast.cw_base import ContourWriterBase
 
-from cw_base import ContourWriterBase
+import logging
 
 logger = logging.getLogger(__name__)
 
@@ -50,8 +49,8 @@ class ContourWriter(ContourWriterBase):
 
         return ImageDraw.Draw(image)
 
-    def _engine_text_draw(self, draw, (x_pos, y_pos), txt, font, **kwargs):
-        draw.text((x_pos, y_pos), txt, font=font, fill=kwargs['fill'])
+    def _engine_text_draw(self, draw, x_pos, y_pos, txt, font, **kwargs):
+        draw.text(x_pos, y_pos, txt, font=font, fill=kwargs['fill'])
 
     def _draw_polygon(self, draw, coordinates, **kwargs):
         """Draw polygon
@@ -218,7 +217,7 @@ class ContourWriter(ContourWriterBase):
         self._add_polygon(image, area_def, lonlats, x_offset=x_offset,
                           y_offset=y_offset, fill=fill, outline=outline)
 
-    def add_grid(self, image, area_def, (Dlon, Dlat), (dlon, dlat),
+    def add_grid(self, image, area_def, Dlon, Dlat, dlon, dlat,
                  font=None, write_text=True, fill=None, outline='white',
                  minor_outline='white', minor_is_tick=True,
                  lon_placement='tb', lat_placement='lr'):
@@ -251,7 +250,7 @@ class ContourWriter(ContourWriterBase):
                        minor_outline=minor_outline, minor_is_tick=minor_is_tick,
                        lon_placement=lon_placement, lat_placement=lat_placement)
 
-    def add_grid_to_file(self, filename, area_def, (Dlon, Dlat), (dlon, dlat),
+    def add_grid_to_file(self, filename, area_def, Dlon, Dlat, dlon, dlat,
                          font=None, write_text=True, fill=None, outline='white',
                          minor_outline='white', minor_is_tick=True,
                          lon_placement='tb', lat_placement='lr'):
@@ -281,7 +280,7 @@ class ContourWriter(ContourWriterBase):
         """
 
         image = Image.open(filename)
-        self.add_grid(image, area_def, (Dlon, Dlat), (dlon, dlat), font=font,
+        self.add_grid(image, area_def, Dlon, Dlat, dlon, dlat, font=font,
                       write_text=write_text, fill=fill, outline=outline,
                       minor_outline=minor_outline,
                       minor_is_tick=minor_is_tick,
