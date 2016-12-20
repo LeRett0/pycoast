@@ -21,8 +21,7 @@ import imp
 
 version = imp.load_source('pycoast.version', 'pycoast/version.py')
 
-requires = ["pyshp", 'numpy', 'pyproj', "pillow",
-            "aggdraw", "configparser"]
+requires = ['pyshp', 'numpy', 'pyproj', 'configparser']
 
 try:
     from PIL import Image
