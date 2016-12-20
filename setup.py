@@ -21,7 +21,7 @@ import imp
 
 version = imp.load_source('pycoast.version', 'pycoast/version.py')
 
-requires = ["pyshp", 'numpy', 'pyproj', "python-pillow",
+requires = ["pyshp", 'numpy', 'pyproj', "pillow",
             "aggdraw", "configparser"]
 
 try:
